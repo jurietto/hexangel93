@@ -1,60 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<script type="module" src="/src/feed.js"></script>
-  <meta charset="UTF-8" />
-  <title>Feed | hexangel93</title>
-  <style>
-    html, body {
-      background-color: black;
-      color: white;
-      font-family: Meiryo, sans-serif;
-      text-align: center;
-      padding: 2rem;
-      margin: 0;
-      visibility: hidden; /* prevent flash on load */
-    }
-  </style>
-</head>
-<body>
-  <div id="feed-content" style="display: none;">
-    <h1>welcome to the feed</h1>
-    <p>you're logged in</p>
-    <footer>site created July 2025</footer>
-  </div>
-
-  <div id="auth-content">
-    <p>loading...</p>
-  </div>
-
-<script type="module">
-  import { Clerk } from "@clerk/clerk-js";
-
-  const clerk = new Clerk(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
-
-  window.addEventListener("load", async () => {
-    try {
-      await clerk.load();
-
-      const user = clerk.user;
-
-      if (user) {
-        document.getElementById("auth-content").style.display = "none";
-        document.getElementById("feed-content").style.display = "block";
-      } else {
-        const auth = document.getElementById("auth-content");
-        auth.innerHTML = `<div id="sign-in"></div>`;
-        clerk.mountSignIn(auth.querySelector("#sign-in"));
+  <head>
+    <meta charset="UTF-8" />
+    <title>Feed | hexangel93</title>
+    <style>
+      html, body {
+        background-color: black;
+        color: white;
+        font-family: Meiryo, sans-serif;
+        text-align: center;
+        padding: 2rem;
+        margin: 0;
+        visibility: hidden;
       }
-    } catch (err) {
-      document.getElementById("auth-content").innerHTML = "<p>Something went wrong. Try again later.</p>";
-      console.error("Clerk init error:", err);
-    } finally {
-      // Always make the body visible
-      document.body.style.visibility = "visible";
-    }
-  });
-</script>
+    </style>
+    <!-- Clerk CDN -->
+    <script
+      async
+      crossorigin
+      src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
+      data-clerk-publishable-key="pk_test_YmV0dGVyLWJhc2lsaXNrLTk2LmNsZXJrLmFjY291bnRzLmRldiQ"
+    ></script>
+  </head>
+  <body>
+    <div id="feed-content" style="display: none;">
+      <h1>welcome to the feed</h1>
+      <p>you're logged in</p>
+      <footer>site created July 2025</footer>
+    </div>
 
-</body>
+    <div id="auth-content">
+      <p>loading...</p>
+    </div>
+
+    <script>
+      window.addEventListener("clerk.ready", async () => {
+        const clerk = window.Clerk;
+
+        try {
+          await clerk.load();
+
+          if (clerk.session && clerk.user) {
+            document.getElementById("auth-content").style.display = "none";
+            document.getElementById("feed-content").style.display = "block";
+          } else {
+            await clerk.redirectToSignIn({ redirectUrl: "/feed" });
+          }
+
+        } catch (err) {
+          console.error("Clerk load error:", err);
+          document.getElementById("auth-content").innerHTML =
+            "<p style='color:red;'>Authentication failed. Please refresh.</p>";
+        } finally {
+          document.body.style.visibility = "visible";
+        }
+      });
+    </script>
+  </body>
 </html>
