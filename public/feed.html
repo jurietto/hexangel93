@@ -14,9 +14,7 @@
       visibility: hidden;
     }
   </style>
-  <!-- Clerk CDN -->
   <script
-    async
     crossorigin
     src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
     data-clerk-publishable-key="pk_test_YmV0dGVyLWJhc2lsaXNrLTk2LmNsZXJrLmFjY291bnRzLmRldiQ"
@@ -30,19 +28,23 @@
   </div>
 
   <div id="auth-content">
-    <p>loading...</p>
+    <p style="color: silver;">loading...</p>
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-      // Wait for Clerk to load and be ready
-      window.addEventListener("clerk.ready", async () => {
+    const showError = (msg) => {
+      document.getElementById("auth-content").innerHTML = `<p style="color: red;">${msg}</p>`;
+      document.body.style.visibility = "visible";
+    };
+
+    window.addEventListener("load", async () => {
+      try {
         const clerk = window.Clerk;
+        if (!clerk) return showError("Clerk failed to load. Script may not be executing.");
+
         await clerk.load();
 
-        const user = clerk.user;
-
-        if (user) {
+        if (clerk.user) {
           document.getElementById("auth-content").style.display = "none";
           document.getElementById("feed-content").style.display = "block";
         } else {
@@ -51,11 +53,14 @@
           const authContent = document.getElementById("auth-content");
           authContent.innerHTML = "";
           authContent.appendChild(signInDiv);
-          clerk.mountSignIn(signInDiv);
+          await clerk.mountSignIn(signInDiv);
         }
-
+      } catch (e) {
+        console.error("Error loading Clerk:", e);
+        showError("An error occurred while loading authentication.");
+      } finally {
         document.body.style.visibility = "visible";
-      });
+      }
     });
   </script>
 </body>
