@@ -5,10 +5,9 @@ const clerk = new Clerk(clerkPubKey);
 
 await clerk.load();
 
+// Redirect logic
 if (clerk.user) {
-  document.getElementById('app').innerHTML = `<div id="user-button"></div>`;
-  clerk.mountUserButton(document.getElementById('user-button'));
+  window.location.href = "/feed";
 } else {
-  document.getElementById('app').innerHTML = `<div id="sign-in"></div>`;
-  clerk.mountSignIn(document.getElementById('sign-in'));
+  await clerk.redirectToSignIn({ redirectUrl: "/feed" });
 }
