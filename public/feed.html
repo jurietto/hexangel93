@@ -4,58 +4,64 @@
   <meta charset="UTF-8" />
   <title>Feed | hexangel93</title>
   <style>
-    body {
+    html, body {
       background-color: black;
       color: white;
       font-family: Meiryo, sans-serif;
-      text-align: center;
-      padding: 2rem;
       margin: 0;
+      padding: 0;
     }
+
+    main {
+      max-width: 600px;
+      margin: 3rem auto;
+      padding: 2rem;
+      background-color: #111;
+      border: 1px solid #444;
+      border-radius: 8px;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      margin-bottom: 1.5rem;
+      color: white;
+    }
+
     #user-info {
       margin-bottom: 2rem;
+      text-align: right;
     }
-    .post-box {
-      margin: 0 auto 2rem;
-      max-width: 600px;
-      padding: 1rem;
-      border: 2px solid #888;
-      border-radius: 10px;
-      background-color: #111;
-    }
-    textarea {
+
+    form textarea {
       width: 100%;
-      height: 120px;
-      resize: none;
-      border: 1px solid #555;
-      background: #000;
+      height: 140px;
+      background-color: black;
+      border: 1px solid #666;
       color: white;
-      padding: 0.5rem;
       font-family: Meiryo, sans-serif;
       font-size: 1rem;
+      padding: 0.75rem;
+      border-radius: 6px;
+      resize: none;
     }
-    .post-actions {
+
+    form button {
       margin-top: 1rem;
-      display: flex;
-      justify-content: space-between;
-    }
-    .post-actions button {
-      padding: 0.5rem 1rem;
-      background: #8b008b;
+      background: linear-gradient(to bottom, #8b008b, #4b004b);
       color: white;
-      border: 2px outset #ff007f;
-      border-radius: 8px;
       font-weight: bold;
+      border: 2px outset #ff007f;
+      border-radius: 6px;
+      padding: 0.5rem 1.5rem;
+      font-size: 1rem;
       cursor: pointer;
     }
-    .post-list {
-      max-width: 600px;
-      margin: 0 auto;
-      text-align: left;
-    }
-    .post-item {
-      border-top: 1px solid #444;
-      padding: 1rem 0;
+
+    footer {
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: silver;
+      text-align: center;
     }
   </style>
   <script
@@ -65,46 +71,29 @@
   ></script>
 </head>
 <body>
-  <div id="feed-content" style="display: none;">
+  <main id="feed-content" style="display: none;">
     <div id="user-info"></div>
-    <h1>welcome to the feed</h1>
-    <div class="post-box">
-      <form>
-        <textarea placeholder="What's on your mind?" required></textarea>
-        <div class="post-actions">
-          <div>
-            <button type="button">Media</button>
-            <button type="button">GIF</button>
-          </div>
-          <button type="submit">Post</button>
-        </div>
-      </form>
-    </div>
-    <div class="post-list">
-      <div class="post-item">
-        <strong>bloodraver:</strong> can't sleep... coding again in the dark...
-      </div>
-      <div class="post-item">
-        <strong>nocturna:</strong> added glitter to my bat wings. feels hexcellent.
-      </div>
-    </div>
-    <footer style="margin-top: 2rem;">site created July 2025</footer>
-  </div>
+    <h1>Post something</h1>
+    <form>
+      <textarea placeholder="What's on your mind?" required></textarea>
+      <button type="submit">Post</button>
+    </form>
+    <footer>site created July 2025</footer>
+  </main>
 
-  <div id="auth-content">
+  <div id="auth-content" style="text-align: center; margin-top: 4rem;">
     <p style="color: silver;">loading...</p>
   </div>
 
   <script>
     const showError = (msg) => {
       document.getElementById("auth-content").innerHTML = `<p style="color: red;">${msg}</p>`;
-      document.body.style.visibility = "visible";
     };
 
     window.addEventListener("load", async () => {
       try {
         const clerk = window.Clerk;
-        if (!clerk) return showError("Clerk failed to load. Script may not be executing.");
+        if (!clerk) return showError("Clerk failed to load.");
 
         await clerk.load();
 
@@ -124,9 +113,7 @@
         }
       } catch (e) {
         console.error("Error loading Clerk:", e);
-        showError("An error occurred while loading authentication.");
-      } finally {
-        document.body.style.visibility = "visible";
+        showError("An error occurred loading Clerk.");
       }
     });
   </script>
