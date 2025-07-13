@@ -4,7 +4,17 @@
   <meta charset="UTF-8" />
   <title>Feed | hexangel93</title>
   <style>
-
+    body {
+      background-color: black;
+      color: white;
+      font-family: Meiryo, sans-serif;
+      text-align: center;
+      padding: 2rem;
+      margin: 0;
+    }
+    #user-info {
+      margin-bottom: 1.5rem;
+    }
   </style>
   <script
     crossorigin
@@ -14,6 +24,7 @@
 </head>
 <body>
   <div id="feed-content" style="display: none;">
+    <div id="user-info"></div>
     <h1>welcome to the feed</h1>
     <p>you're logged in</p>
     <footer>site created July 2025</footer>
@@ -39,6 +50,10 @@
         if (clerk.user) {
           document.getElementById("auth-content").style.display = "none";
           document.getElementById("feed-content").style.display = "block";
+
+          // Mount the Clerk user button
+          const userInfo = document.getElementById("user-info");
+          clerk.mountUserButton(userInfo);
         } else {
           const signInDiv = document.createElement("div");
           signInDiv.id = "sign-in";
