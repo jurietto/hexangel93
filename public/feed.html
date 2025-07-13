@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Feed | hexangel93</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: Meiryo, sans-serif;
+      text-align: center;
+      padding: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="feed-content" style="display: none;">
+    <h1>welcome to the feed</h1>
+    <p>you're logged in</p>
+    <footer>site created July 2025</footer>
+  </div>
+
+  <div id="auth-content">
+    <p>loading...</p>
+  </div>
+
+  <script type="module">
+    import { Clerk } from "@clerk/clerk-js";
+
+    const clerk = new Clerk(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
+    await clerk.load();
+
+    const user = clerk.user;
+
+    if (user) {
+      document.getElementById("auth-content").style.display = "none";
+      document.getElementById("feed-content").style.display = "block";
+    } else {
+      document.getElementById("auth-content").innerHTML = `<div id="sign-in"></div>`;
+      const signInDiv = document.getElementById("sign-in");
+      clerk.mountSignIn(signInDiv);
+    }
+  </script>
+</body>
+</html>
