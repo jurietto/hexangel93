@@ -26,11 +26,12 @@
     <p>loading...</p>
   </div>
 
-  <script type="module">
-    import { Clerk } from "@clerk/clerk-js";
+<script type="module">
+  import { Clerk } from "@clerk/clerk-js";
 
-    const clerk = new Clerk(window.CLERK_PUBLISHABLE_KEY || import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
+  const clerk = new Clerk(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
 
+  window.addEventListener("load", async () => {
     try {
       await clerk.load();
 
@@ -44,13 +45,15 @@
         auth.innerHTML = `<div id="sign-in"></div>`;
         clerk.mountSignIn(auth.querySelector("#sign-in"));
       }
-
-    } catch (error) {
-      console.error("Clerk load error:", error);
-      document.getElementById("auth-content").innerHTML = "<p>Authentication failed. Please try again later.</p>";
+    } catch (err) {
+      document.getElementById("auth-content").innerHTML = "<p>Something went wrong. Try again later.</p>";
+      console.error("Clerk init error:", err);
+    } finally {
+      // Always make the body visible
+      document.body.style.visibility = "visible";
     }
+  });
+</script>
 
-    document.body.style.visibility = "visible";
-  </script>
 </body>
 </html>
