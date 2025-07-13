@@ -34,24 +34,28 @@
   </div>
 
   <script>
-    window.addEventListener("clerk.ready", async () => {
-      const clerk = window.Clerk;
-      await clerk.load();
+    document.addEventListener("DOMContentLoaded", async () => {
+      // Wait for Clerk to load and be ready
+      window.addEventListener("clerk.ready", async () => {
+        const clerk = window.Clerk;
+        await clerk.load();
 
-      const user = clerk.user;
+        const user = clerk.user;
 
-      if (user) {
-        document.getElementById("auth-content").style.display = "none";
-        document.getElementById("feed-content").style.display = "block";
-      } else {
-        const signInDiv = document.createElement("div");
-        signInDiv.id = "sign-in";
-        document.getElementById("auth-content").innerHTML = '';
-        document.getElementById("auth-content").appendChild(signInDiv);
-        await clerk.mountSignIn(signInDiv);
-      }
+        if (user) {
+          document.getElementById("auth-content").style.display = "none";
+          document.getElementById("feed-content").style.display = "block";
+        } else {
+          const signInDiv = document.createElement("div");
+          signInDiv.id = "sign-in";
+          const authContent = document.getElementById("auth-content");
+          authContent.innerHTML = "";
+          authContent.appendChild(signInDiv);
+          clerk.mountSignIn(signInDiv);
+        }
 
-      document.body.style.visibility = "visible";
+        document.body.style.visibility = "visible";
+      });
     });
   </script>
 </body>
