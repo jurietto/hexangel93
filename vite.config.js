@@ -1,6 +1,10 @@
 // vite.config.js
-export default {
-  server: {
-    host: true, // 👈 This is the key line
-  },
-}
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  preview: {
+    port: 3000,
+    host: true,
+    allowedHosts: ['hexangel93.com']
+  }
+})
