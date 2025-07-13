@@ -4,12 +4,14 @@
   <meta charset="UTF-8" />
   <title>Feed | hexangel93</title>
   <style>
-    body {
+    html, body {
       background-color: black;
       color: white;
       font-family: Meiryo, sans-serif;
       text-align: center;
       padding: 2rem;
+      margin: 0;
+      visibility: hidden; /* prevent flash on load */
     }
   </style>
 </head>
@@ -27,19 +29,28 @@
   <script type="module">
     import { Clerk } from "@clerk/clerk-js";
 
-    const clerk = new Clerk(import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
-    await clerk.load();
+    const clerk = new Clerk(window.CLERK_PUBLISHABLE_KEY || import.meta.env.VITE_CLERK_PUBLISHABLE_KEY);
 
-    const user = clerk.user;
+    try {
+      await clerk.load();
 
-    if (user) {
-      document.getElementById("auth-content").style.display = "none";
-      document.getElementById("feed-content").style.display = "block";
-    } else {
-      document.getElementById("auth-content").innerHTML = `<div id="sign-in"></div>`;
-      const signInDiv = document.getElementById("sign-in");
-      clerk.mountSignIn(signInDiv);
+      const user = clerk.user;
+
+      if (user) {
+        document.getElementById("auth-content").style.display = "none";
+        document.getElementById("feed-content").style.display = "block";
+      } else {
+        const auth = document.getElementById("auth-content");
+        auth.innerHTML = `<div id="sign-in"></div>`;
+        clerk.mountSignIn(auth.querySelector("#sign-in"));
+      }
+
+    } catch (error) {
+      console.error("Clerk load error:", error);
+      document.getElementById("auth-content").innerHTML = "<p>Authentication failed. Please try again later.</p>";
     }
+
+    document.body.style.visibility = "visible";
   </script>
 </body>
 </html>
