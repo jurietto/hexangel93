@@ -14,7 +14,8 @@ function renderHome() {
     </nav>
     <main>
       <h1>Welcome to hexangel93.com</h1>
-      <img src="./ghost.gif" alt="ghost" />
+      <img src="/ghost.gif" alt="ghost" />
+
       <div>
         <button id="login">Log in</button>
       </div>
